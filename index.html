@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -119,15 +120,15 @@
             border-radius: 50%;
         }
 
-        input:checked + .slider {
+        input:checked+.slider {
             background-color: #2ecc71;
         }
 
-        input:focus + .slider {
+        input:focus+.slider {
             box-shadow: 0 0 1px #2ecc71;
         }
 
-        input:checked + .slider:before {
+        input:checked+.slider:before {
             transform: translateX(22px);
         }
 
@@ -135,31 +136,6 @@
             font-weight: 600;
             color: #555;
             font-size: 0.95rem;
-        }
-
-        button {
-            background-color: #3498db;
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-top: 25px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            width: 100%;
-            color: #ffffff;
-        }
-
-        button:hover {
-            background-color: #2980b9;
-            transform: translateY(-2px);
-        }
-
-        button:active {
-            background-color: #2471a3;
-            transform: translateY(0);
         }
 
         .results {
@@ -214,12 +190,57 @@
                 font-size: 1.1rem;
             }
         }
+
+        .button {
+            color: white;
+            background-color: #222;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            line-height: 2rem;
+            padding: 5px 15px;
+            width: 100%;
+            cursor: pointer;
+            text-align: center;
+            margin-right: 0.5rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+        }
+
+        .button:hover {
+            background-color: #333;
+        }
+
+        .button svg {
+            display: inline;
+            width: 1.3rem;
+            height: 1.3rem;
+            margin-right: 0.75rem;
+            color: white;
+        }
+
+        .button:focus svg {
+            animation: spin_357 0.5s linear;
+        }
+
+        @keyframes spin_357 {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
+
 <body>
     <div class="calculator-container">
         <h1>Calculadora de Préstamos</h1>
-        
+
         <div class="input-group">
             <label for="loanAmount">Monto del Préstamo:</label>
             <input type="number" id="loanAmount" placeholder="Ej: 10000" min="0" value="10000">
@@ -232,12 +253,12 @@
                 <option value="USD">Dólar Americano (USD)</option>
             </select>
         </div>
-        
+
         <div class="input-group">
             <label for="interestRate">Tasa de Interés Anual (%):</label>
             <input type="number" id="interestRate" placeholder="Ej: 5" min="0" step="0.01" value="5">
         </div>
-        
+
         <div class="input-group">
             <label for="loanTerm">Plazo:</label>
             <div class="flex items-center justify-between">
@@ -251,8 +272,19 @@
                 </div>
             </div>
         </div>
-        
-        <button id="calculateBtn">Calcular</button>
+
+        <button type="button" id="calculateBtn" class="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+                <path
+                    d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z">
+                </path>
+                <path fill-rule="evenodd"
+                    d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z">
+                </path>
+            </svg>
+            Calcular
+        </button>
 
         <div class="results">
             <h2>Resultados:</h2>
@@ -311,7 +343,7 @@
                 if (currencyCode === 'USD') {
                     locale = 'en-US';
                 }
-                
+
                 return new Intl.NumberFormat(locale, options).format(amount);
             }
 
@@ -352,11 +384,11 @@
                     const numerator = monthlyInterestRate * Math.pow(1 + monthlyInterestRate, loanTerm);
                     const denominator = Math.pow(1 + monthlyInterestRate, loanTerm) - 1;
                     monthlyPayment = loanAmount * (numerator / denominator);
-                    
+
                     totalPayment = monthlyPayment * loanTerm;
                     totalInterestPaid = totalPayment - loanAmount;
                 }
-                
+
                 monthlyPaymentSpan.textContent = formatCurrency(monthlyPayment, selectedCurrency);
                 totalInterestSpan.textContent = formatCurrency(totalInterestPaid, selectedCurrency);
                 totalPaymentSpan.textContent = formatCurrency(totalPayment, selectedCurrency);
@@ -375,9 +407,9 @@
 
             currencySelect.addEventListener('change', calculateLoan);
 
-            calculateLoan(); 
+            calculateLoan();
         });
     </script>
 </body>
-</html>
 
+</html>
