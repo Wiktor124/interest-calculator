@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Intereses</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .calculator-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+            font-size: 0.95rem;
+        }
+
+        .input-group input[type="number"],
+        .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dcdcdc;
+            border-radius: 8px;
+            font-size: 1rem;
+            color: #333;
+            box-sizing: border-box;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13.2-6.4H18.2c-4.8%200-9.3%201.8-13.2%206.4-4.2%204.2-6.4%209.6-6.4%2015.6s2.2%2011.4%206.4%2015.6l128%20127.9c3.6%203.6%208.2%205.7%2013.2%205.7s9.6-2.1%2013.2-5.7l128-127.9c4.2-4.2%206.4-9.6%206.4-15.6s-2.2-11.4-6.4-15.6z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 12px top 50%;
+            background-size: 12px auto;
+        }
+
+        .input-group input[type="number"]:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .toggle-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-top: 10px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+            margin-right: 10px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 28px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #2ecc71;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2ecc71;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        #termUnit {
+            font-weight: 600;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 25px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            width: 100%;
+            color: #ffffff;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            background-color: #2471a3;
+            transform: translateY(0);
+        }
+
+        .results {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+            text-align: left;
+        }
+
+        .results h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .results p {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .results span {
+            font-weight: bold;
+            color: #000;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 600px) {
+            .calculator-container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            button {
+                font-size: 1rem;
+                padding: 10px 20px;
+            }
+
+            .results p {
+                font-size: 1rem;
+            }
+
+            .results span {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <h1>Calculadora de Préstamos</h1>
+        
+        <div class="input-group">
+            <label for="loanAmount">Monto del Préstamo:</label>
+            <input type="number" id="loanAmount" placeholder="Ej: 10000" min="0" value="10000">
+        </div>
+
+        <div class="input-group">
+            <label for="currencySelect">Moneda:</label>
+            <select id="currencySelect">
+                <option value="CRC">Colón Costarricense (CRC)</option>
+                <option value="USD">Dólar Americano (USD)</option>
+            </select>
+        </div>
+        
+        <div class="input-group">
+            <label for="interestRate">Tasa de Interés Anual (%):</label>
+            <input type="number" id="interestRate" placeholder="Ej: 5" min="0" step="0.01" value="5">
+        </div>
+        
+        <div class="input-group">
+            <label for="loanTerm">Plazo:</label>
+            <div class="flex items-center justify-between">
+                <input type="number" id="loanTerm" placeholder="Ej: 12" min="1" value="12" class="flex-grow mr-4">
+                <div class="toggle-wrapper">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="termToggle">
+                        <span class="slider"></span>
+                    </label>
+                    <span id="termUnit">Meses</span>
+                </div>
+            </div>
+        </div>
+        
+        <button id="calculateBtn">Calcular</button>
+
+        <div class="results">
+            <h2>Resultados:</h2>
+            <p>Cuota Mensual: <span id="monthlyPayment">$0.00</span></p>
+            <p>Total Intereses a Pagar: <span id="totalInterest">$0.00</span></p>
+            <p>Suma Préstamo + Intereses: <span id="totalPayment">$0.00</span></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loanAmountInput = document.getElementById('loanAmount');
+            const currencySelect = document.getElementById('currencySelect');
+            const interestRateInput = document.getElementById('interestRate');
+            const loanTermInput = document.getElementById('loanTerm');
+            const termToggle = document.getElementById('termToggle');
+            const termUnitSpan = document.getElementById('termUnit');
+            const calculateBtn = document.getElementById('calculateBtn');
+            const monthlyPaymentSpan = document.getElementById('monthlyPayment');
+            const totalInterestSpan = document.getElementById('totalInterest');
+            const totalPaymentSpan = document.getElementById('totalPayment');
+
+            function showCustomAlert(message) {
+                const existingAlert = document.getElementById('custom-alert');
+                if (existingAlert) {
+                    existingAlert.remove();
+                }
+
+                const alertDiv = document.createElement('div');
+                alertDiv.id = 'custom-alert';
+                alertDiv.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50';
+                alertDiv.innerHTML = `
+                    <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
+                        <p class="text-lg font-semibold text-gray-800 mb-4">${message}</p>
+                        <button id="close-alert" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
+                            Entendido
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(alertDiv);
+
+                document.getElementById('close-alert').addEventListener('click', () => {
+                    alertDiv.remove();
+                });
+            }
+
+            function formatCurrency(amount, currencyCode) {
+                let locale = 'es-CR';
+                let options = {
+                    style: 'currency',
+                    currency: currencyCode,
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                };
+
+                if (currencyCode === 'USD') {
+                    locale = 'en-US';
+                }
+                
+                return new Intl.NumberFormat(locale, options).format(amount);
+            }
+
+            function calculateLoan() {
+                const loanAmount = parseFloat(loanAmountInput.value);
+                const selectedCurrency = currencySelect.value;
+                let annualInterestRate = parseFloat(interestRateInput.value);
+                let loanTerm = parseFloat(loanTermInput.value);
+
+                if (isNaN(loanAmount) || loanAmount <= 0) {
+                    showCustomAlert('Por favor, ingresa un monto de préstamo válido (mayor que 0).');
+                    return;
+                }
+                if (isNaN(annualInterestRate) || annualInterestRate < 0) {
+                    showCustomAlert('Por favor, ingresa una tasa de interés anual válida (no negativa).');
+                    return;
+                }
+                if (isNaN(loanTerm) || loanTerm <= 0) {
+                    showCustomAlert('Por favor, ingresa un plazo válido (mayor que 0).');
+                    return;
+                }
+
+                const monthlyInterestRate = (annualInterestRate / 100) / 12;
+
+                if (termToggle.checked) {
+                    loanTerm = loanTerm * 12;
+                }
+
+                let monthlyPayment;
+                let totalPayment;
+                let totalInterestPaid;
+
+                if (monthlyInterestRate === 0) {
+                    monthlyPayment = loanAmount / loanTerm;
+                    totalPayment = loanAmount;
+                    totalInterestPaid = 0;
+                } else {
+                    const numerator = monthlyInterestRate * Math.pow(1 + monthlyInterestRate, loanTerm);
+                    const denominator = Math.pow(1 + monthlyInterestRate, loanTerm) - 1;
+                    monthlyPayment = loanAmount * (numerator / denominator);
+                    
+                    totalPayment = monthlyPayment * loanTerm;
+                    totalInterestPaid = totalPayment - loanAmount;
+                }
+                
+                monthlyPaymentSpan.textContent = formatCurrency(monthlyPayment, selectedCurrency);
+                totalInterestSpan.textContent = formatCurrency(totalInterestPaid, selectedCurrency);
+                totalPaymentSpan.textContent = formatCurrency(totalPayment, selectedCurrency);
+            }
+
+            calculateBtn.addEventListener('click', calculateLoan);
+
+            termToggle.addEventListener('change', () => {
+                if (termToggle.checked) {
+                    termUnitSpan.textContent = 'Años';
+                } else {
+                    termUnitSpan.textContent = 'Meses';
+                }
+                calculateLoan();
+            });
+
+            currencySelect.addEventListener('change', calculateLoan);
+
+            calculateLoan(); 
+        });
+    </script>
+</body>
+</html>
+
